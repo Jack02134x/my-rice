@@ -1,0 +1,6 @@
+waybar --config ~/.config/waybar/themes/animated-waybar/config.jsonc --style ~/.config/waybar/themes/animated-waybar/style.css
+waybar --config ~/.config/waybar/themes/blush/config.jsonc --style ~/.config/waybar/themes/blush/style.css
+waybar --config ~/.config/waybar/themes/darkminimal/config.jsonc --style ~/.config/waybar/themes/darkminimal/style.css
+waybar --config ~/.config/waybar/themes/darkminimaljp/config.jsonc --style ~/.config/waybar/themes/darkminimaljp/style.css
+waybar --config ~/.config/waybar/themes/minimal/config.jsonc --style ~/.config/waybar/themes/minimal/style.css
+waybar --config ~/.config/waybar/themes/slanted-bubbles/config.jsonc --style ~/.config/waybar/themes/slanted-bubbles/style.css

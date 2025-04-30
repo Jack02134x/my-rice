@@ -1,0 +1,32 @@
+windowrulev2 = animation slide, class:^(wofi)$
+windowrulev2 = move 100%-433 53, class:^(wofi)$ title:^(clippick)$
+windowrulev2 = noblur, class:^(kitty)$
+windowrulev2 = noshadow,class:^(kitty)$
+windowrulev2 = opacity 1.0 override 1.0 override, class:^(kitty)$
+windowrulev2 = opacity 1.0 override 1.0 override, class:^(Google-chrome)$
+windowrulev2 = opacity 1.0 override 1.0 override, class:^(firefox)$
+windowrulev2 = opacity 1.0 override 1.0 override, class:^(mpv)$
+windowrulev2 = float, class:^(waypaper)$
+windowrulev2 = tile, initialTitle:^(Godot)$
+windowrulev2 = opacity 0.8 0.8, class:^(org.pwmt.zathura)$
+
+#windowrulev2 = float, class:^(class)$
+#windowrulev2 = noborder,class:^(class)$
+#windowrulev2 = noshadow,class:^(class)$
+#windowrulev2 = noblur, class:^(class)$
+#windowrulev2 = opacity 1.0 override <your opacity> override, class:^(class)$
+####################################
+# to set a title do class and , then title in same format just replaced with class
+
+windowrulev2 = opacity 0.8 1.0, class:^(foot|footclient)$
+#---------------foot upddate term-------------------------#
+#---------------------------------------------------------#
+windowrulev2 = float,title:^(PacUpdate)$
+windowrulev2 = center, title:^(PacUpdate)$
+windowrulev2 = size 850 850, title:^(PacUpdate)$
+
+#---------------foot network term-------------------------#
+#---------------------------------------------------------#
+windowrulev2 = float,title:^(FootNmtui)$
+windowrulev2 = center, title:^(FootNmtui)$
+windowrulev2 = size 800 800, title:^(FootNmtui)$
