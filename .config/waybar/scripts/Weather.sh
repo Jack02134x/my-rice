@@ -1,95 +1,47 @@
-#!/usr/bin/env bash
-#  ┓ ┏┏┓┏┓┏┳┓┓┏┏┓┳┓
-#  ┃┃┃┣ ┣┫ ┃ ┣┫┣ ┣┫
-#  ┗┻┛┗┛┛┗ ┻ ┛┗┗┛┛┗
-#
+#!/bin/bash
 
-# /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
-# weather info from wttr. https://github.com/chubin/wttr.in
-# Remember to add city
+# Get location data using IP Geolocation
 
-city=Gwalior
-cachedir=~/.cache/rbn
-cachefile=${0##*/}-$1
+# Recommended with API, but you can try w/o API [IPINFO.IO]
+# API_TOKEN="YOUR_API_TOKEN"
+# location_data=$(curl -s "https://ipinfo.io?token=$API_TOKEN" 2>/dev/null)
+# location_data=$(curl -s https://ipinfo.io 2>/dev/null) #[Limited requests. Require API to send 50k request/month]
 
-if [ ! -d $cachedir ]; then
-  mkdir -p $cachedir
+# Extract city and country code (ISO 3166-1 alpha-2 code)
+# CITY=$(echo "$location_data" | jq -r '.city // empty')
+# COUNTRY=$(echo "$location_data" | jq -r '.country // empty')
+
+# IPINFO Alternative [IP-API.COM]
+# location_data=$(curl -s "http://ip-api.com/json/" 2>/dev/null)
+
+# Extract city and country code
+# CITY=$(echo "$location_data" | jq -r '.city // empty')
+# COUNTRY=$(echo "$location_data" | jq -r '.countryCode // empty')
+# Visit http://ip-api.com/json/ to find other variables
+
+# HARDCODE Location
+CITY="Your city here"
+
+if [[ -n "$CITY" ]]; then
+    weather_info=$(curl -s "wttr.in/$CITY?format=%c+%C+%t" 2>/dev/null)
+
+    if [[ -n "$weather_info" ]]; then
+        # Split data
+        IFS=' ' read -r icon condition_and_temp <<< "$weather_info"
+        rest="${weather_info#"$icon "}"
+        temperature="${rest##* }"
+        condition="${rest% $temperature}"
+
+        # Replace icon with thermometer symbol (󰖕) to match original style
+        thermometer_icon="󰖕"
+
+        # Format temperature (ensure space between number and °C if needed)
+        temperature_formatted=$(echo "$temperature" | sed 's/°C/ °C/')
+
+        echo -e "{\"text\":\"$thermometer_icon $temperature_formatted\", \"alt\":\"$CITY\", \"tooltip\":\"$CITY: $temperature_formatted $condition\"}"
+    else
+        echo "Weather info unavailable for $CITY"
+    fi
+else
+    echo "Unable to determine your location"
 fi
-
-if [ ! -f $cachedir/$cachefile ]; then
-  touch $cachedir/$cachefile
-fi
-
-# Save current IFS
-SAVEIFS=$IFS
-# Change IFS to new line.
-IFS=$'\n'
-
-cacheage=$(($(date +%s) - $(stat -c '%Y' "$cachedir/$cachefile")))
-if [ $cacheage -gt 1740 ] || [ ! -s $cachedir/$cachefile ]; then
-  data=($(curl -s https://en.wttr.in/"$city"$1\?0qnT 2>&1))
-  echo ${data[0]} | cut -f1 -d, >$cachedir/$cachefile
-  echo ${data[1]} | sed -E 's/^.{15}//' >>$cachedir/$cachefile
-  echo ${data[2]} | sed -E 's/^.{15}//' >>$cachedir/$cachefile
-fi
-
-weather=($(cat $cachedir/$cachefile))
-
-# Restore IFSClear
-IFS=$SAVEIFS
-
-temperature=$(echo ${weather[2]} | sed -E 's/([[:digit:]]+)\.\./\1 to /g')
-
-#echo ${weather[1]##*,}
-
-# https://fontawesome.com/icons?s=solid&c=weather
-case $(echo ${weather[1]##*,} | tr '[:upper:]' '[:lower:]') in
-"clear" | "sunny")
-  condition=""
-  ;;
-"partly cloudy")
-  condition="󰖕"
-  ;;
-"cloudy")
-  condition=""
-  ;;
-"overcast")
-  condition=""
-  ;;
-"haze")
-  condition=""
-  ;;
-"fog" | "freezing fog")
-  condition=""
-  ;;
-"patchy rain possible" | "patchy light drizzle" | "light drizzle" | "patchy light rain" | "light rain" | "light rain shower" | "mist" | "rain")
-  condition="󰼳"
-  ;;
-"moderate rain at times" | "moderate rain" | "heavy rain at times" | "heavy rain" | "moderate or heavy rain shower" | "torrential rain shower" | "rain shower")
-  condition=""
-  ;;
-"patchy snow possible" | "patchy sleet possible" | "patchy freezing drizzle possible" | "freezing drizzle" | "heavy freezing drizzle" | "light freezing rain" | "moderate or heavy freezing rain" | "light sleet" | "ice pellets" | "light sleet showers" | "moderate or heavy sleet showers")
-  condition="󰼴"
-  ;;
-"blowing snow" | "moderate or heavy sleet" | "patchy light snow" | "light snow" | "light snow showers")
-  condition="󰙿"
-  ;;
-"blizzard" | "patchy moderate snow" | "moderate snow" | "patchy heavy snow" | "heavy snow" | "moderate or heavy snow with thunder" | "moderate or heavy snow showers")
-  condition=""
-  ;;
-"thundery outbreaks possible" | "patchy light rain with thunder" | "moderate or heavy rain with thunder" | "patchy light snow with thunder")
-  condition=""
-  ;;
-*)
-  condition=""
-  echo -e "{\"text\":\""$condition"\", \"alt\":\""${weather[0]}"\", \"tooltip\":\""${weather[0]}: $temperature ${weather[1]}"\"}"
-  ;;
-esac
-
-#echo -e ($temp $condition)
-
-echo -e "{\"text\":\""$condition $temperature"\", \"alt\":\""${weather[0]}"\", \"tooltip\":\""${weather[0]}: $temperature ${weather[1]}"\"}"
-
-cached_weather=" $temperature  \n$condition ${weather[1]}"
-
-echo -e $cached_weather >~/.cache/.weather_cache
