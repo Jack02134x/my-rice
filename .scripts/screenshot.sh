@@ -47,7 +47,7 @@ take_screenshot() {
                     grim -g "$(hyprctl activewindow -j | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" - | wl-copy
                     ;;
             esac
-            notify-send "Hyprshot" "Screenshot copied to clipboard."
+            notify-send "Grim : " "Screenshot copied to clipboard."
             ;;
         save)
             case $mode in
@@ -63,7 +63,7 @@ take_screenshot() {
                     grim -g "$(hyprctl activewindow -j | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" "$filepath"
                     ;;
             esac
-            notify-send "Hyprshot" "Screenshot saved at $filepath."
+            notify-send "Grim : " "Screenshot saved at $filepath."
             ;;
         *)
             echo "Invalid action: $action."
