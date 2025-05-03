@@ -1,7 +1,3 @@
-Credit: Huge thanks to Abhra00 for the original project!
-Link to Github : https://github.com/Abhra00/Matuprland.git
-
-
 Instructions
 Edit the hyprlock file to suit your preferences.
 
