@@ -6,8 +6,7 @@
 
 # wallpaper
 #hyprpaper &
-#swww-daemon &
-./.scripts/msms.sh &
+swww-daemon &
 #mpvpaper -o "no-audio --loop-playlist shuffle" eDP-1 /home/jack/.config/hypr/wallpapers/'21 - Lone Samurai Sekiro Live Wallpaper.mp4' &
 
 # Applets
